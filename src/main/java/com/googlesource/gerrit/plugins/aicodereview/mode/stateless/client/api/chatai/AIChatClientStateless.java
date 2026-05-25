@@ -89,9 +89,9 @@ public class AIChatClientStateless extends AIChatClient implements ChatAIClient 
       Configuration config, ChangeSetData changeSetData, String patchSet) {
     URI uri =
         URI.create(config.getAIDomain() + UriResourceLocatorStateless.getChatResourceUri(config));
-    log.debug("AIChat request URI: {}", uri);
+    // log.debug("AIChat request URI: {}", uri);
     requestBody = createRequestBody(config, changeSetData, patchSet);
-    log.debug("AIChat request body: {}", requestBody);
+    // log.debug("AIChat request body: {}", requestBody);
 
     HttpRequest.Builder builder =
         HttpRequest.newBuilder()
@@ -104,6 +104,18 @@ public class AIChatClientStateless extends AIChatClient implements ChatAIClient 
     if (authHeader != null) {
       builder.header(authHeader.getName(), authHeader.getValue());
     }
+
+    log.info("AIChat HTTP Request -> URI: {}", uri);
+    log.info(
+        "AIChat HTTP Request -> Auth: {}={}",
+        authHeader != null ? authHeader.getName() : "none",
+        authHeader != null
+            ? (authHeader.getValue().length() > 20
+                ? authHeader.getValue().substring(0, 20) + "..."
+                : authHeader.getValue())
+            : "none");
+    log.info("AIChat HTTP Request -> Body: {}", requestBody);
+
     return builder.build();
   }
 

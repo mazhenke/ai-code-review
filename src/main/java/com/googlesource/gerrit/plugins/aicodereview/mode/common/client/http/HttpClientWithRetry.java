@@ -61,6 +61,10 @@ public class HttpClientWithRetry {
                     log.error(
                         "Retry because HTTP status code is not 200. The status code is: "
                             + response.statusCode());
+                    log.info(
+                        "AIChat HTTP Response -> Status: {}, Body: {}",
+                        response.statusCode(),
+                        response.body());
                     return true;
                   } else {
                     return false;
