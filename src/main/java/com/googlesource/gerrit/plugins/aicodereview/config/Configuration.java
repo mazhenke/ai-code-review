@@ -135,6 +135,7 @@ public class Configuration {
       "ignoreResolvedChatGptComments";
   private static final String KEY_FORCE_CREATE_ASSISTANT = "forceCreateAssistant";
   private static final String KEY_ENABLE_MESSAGE_DEBUGGING = "enableMessageDebugging";
+  private static final String KEY_AI_EXTRA_BODY = "aiExtraBody";
 
   private final OneOffRequestContext context;
   @Getter private final Account.Id userId;
@@ -337,6 +338,10 @@ public class Configuration {
 
   public boolean getEnableMessageDebugging() {
     return getBoolean(KEY_ENABLE_MESSAGE_DEBUGGING, DEFAULT_ENABLE_MESSAGE_DEBUGGING);
+  }
+
+  public String getAIExtraBody() {
+    return getString(KEY_AI_EXTRA_BODY, "");
   }
 
   public boolean getIgnoreOutdatedInlineComments() {
