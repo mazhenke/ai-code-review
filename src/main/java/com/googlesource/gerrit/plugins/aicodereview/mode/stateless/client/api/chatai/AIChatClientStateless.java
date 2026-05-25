@@ -17,7 +17,10 @@ package com.googlesource.gerrit.plugins.aicodereview.mode.stateless.client.api.c
 import static com.googlesource.gerrit.plugins.aicodereview.utils.GsonUtils.getNoEscapedGson;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Strings;
 import com.google.common.net.HttpHeaders;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.googlesource.gerrit.plugins.aicodereview.config.Configuration;
@@ -134,6 +137,14 @@ public class AIChatClientStateless extends AIChatClient implements ChatAIClient 
             .toolChoice(AIChatTools.retrieveFormatRepliesToolChoice())
             .build();
 
-    return getNoEscapedGson().toJson(chatGptCompletionRequest);
+    String json = getNoEscapedGson().toJson(chatGptCompletionRequest);
+    String extraBody = config.getAIExtraBody();
+    if (!Strings.isNullOrEmpty(extraBody)) {
+      JsonObject jsonObject = JsonParser.parseString(json).getAsJsonObject();
+      JsonObject extraObject = JsonParser.parseString(extraBody).getAsJsonObject();
+      extraObject.entrySet().forEach(entry -> jsonObject.add(entry.getKey(), entry.getValue()));
+      return getNoEscapedGson().toJson(jsonObject);
+    }
+    return json;
   }
 }
